@@ -1,0 +1,18 @@
+{
+    "name": "megaads/adsense",
+    "description": "Include Google Adsense to your website",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Megaads\\Adsense\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Megaads",
+            "email": "info@megaads.vn"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
