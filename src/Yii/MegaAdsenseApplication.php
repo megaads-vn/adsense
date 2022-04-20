@@ -78,9 +78,9 @@ class MegaAdsenseApplication
         $configStores = $config->stores;
         if (empty($slug)) {
             $retVal = false;
-        } else if (!empty($slug) && $configType == 'block' && in_array($slug, $configStores)) {
+        } else if (!empty($slug) && $configType == 'block' && (empty($configStores) || in_array($slug, $configStores))) {
             $retVal = false;
-        } else if (!empty($slug) && $configType == 'allow' && !in_array($slug, $configStores)) {
+        } else if (!empty($slug) && $configType == 'allow' && (!empty($configStores) && !in_array($slug, $configStores))) {
             $retVal = false;
         }
         if ($retVal && !$wasIpAllowed) {
