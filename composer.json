@@ -3,6 +3,9 @@
     "description": "Include Google Adsense to your website",
     "license": "MIT",
     "autoload": {
+        "classmap": [
+            "src"
+        ],
         "psr-4": {
             "Megaads\\Adsense\\": "src/"
         }
