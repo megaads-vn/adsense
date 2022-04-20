@@ -3,7 +3,7 @@ namespace Megaads\Adsense\Utils;
 
 use Config;
 use DB;
-use Request;
+use Illuminate\Support\Facades\Route;
 
 class Adsense 
 {
@@ -38,7 +38,8 @@ class Adsense
         $retVal = true;
         $requestIp = self::getRealIpAddr();
         $wasIpAllowed = self::isAllowIp($config->ip_range, $requestIp);
-        $slug = Request::route()->getParameter('slug', null);
+        $routeParameters = Route::current()->parameters();
+        $slug = isset($routeParameters['slug']) ? $routeParameters['slug'] : null;
         $configType = $config->type;
         $configStores = $config->stores;
         if (empty($slug)) {
