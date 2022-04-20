@@ -3,7 +3,7 @@ namespace Megaads\Adsense\Utils;
 
 use Config;
 use DB;
-use Illuminate\Support\Facades\Route;
+use Request;
 
 class Adsense 
 {
@@ -37,22 +37,25 @@ class Adsense
     public static function isDisplayAdsenseBlock($config) {
         $retVal = true;
         $requestIp = self::getRealIpAddr();
-        $wasIpAllowed = self::isAllowIp($config->ip_range, $requestIp);
-        $routeParameters = Route::current()->parameters();
-        $slug = isset($routeParameters['slug']) ? $routeParameters['slug'] : null;
-        $configType = $config->type;
-        $configStores = $config->stores;
-        if (empty($slug)) {
+        $slug = Request::route()->getParameter('slug', null);
+        if (empty($config)) {
             $retVal = false;
-        } else if (!empty($slug) && $configType == 'block' && (empty($configStores) || in_array($slug, $configStores))) {
-            $retVal = false;
-        } else if (!empty($slug) && $configType == 'allow' && (!empty($configStores) && !in_array($slug, $configStores))) {
-            $retVal = false;
-        }
-        if ($retVal && !$wasIpAllowed) {
-            $retVal = false;
-        } else if ($retVal && !$config->enable) {
-            $retVal = false;
+        } else {
+            $wasIpAllowed = self::isAllowIp($config->ip_range, $requestIp);
+            $configType = $config->type;
+            $configStores = $config->stores;
+            if (empty($slug)) {
+                $retVal = false;
+            } else if (!empty($slug) && $configType == 'block' && (empty($configStores) || in_array($slug, $configStores))) {
+                $retVal = false;
+            } else if (!empty($slug) && $configType == 'allow' && (!empty($configStores) && !in_array($slug, $configStores))) {
+                $retVal = false;
+            }
+            if ($retVal && !$wasIpAllowed) {
+                $retVal = false;
+            } else if ($retVal && !$config->enable) {
+                $retVal = false;
+            }
         }
         return $retVal;
     }
