@@ -3,7 +3,7 @@ namespace Megaads\Adsense\Utils;
 
 use Config;
 use DB;
-use Request;
+use Illuminate\Support\Facades\Route;
 
 class Adsense 
 {
@@ -37,7 +37,8 @@ class Adsense
     public static function isDisplayAdsenseBlock($config) {
         $retVal = true;
         $requestIp = self::getRealIpAddr();
-        $slug = Request::route()->getParameter('slug', null);
+        $routeParameters = Route::current()->parameters();
+        $slug = isset($routeParameters['slug']) ? $routeParameters['slug'] : null;
         if (empty($config)) {
             $retVal = false;
         } else {
