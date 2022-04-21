@@ -37,8 +37,11 @@ class Adsense
     public static function isDisplayAdsenseBlock($config) {
         $retVal = true;
         $requestIp = self::getRealIpAddr();
-        $routeParameters = Route::current()->parameters();
-        $slug = isset($routeParameters['slug']) ? $routeParameters['slug'] : null;
+        $slug = null;
+        if (!empty(Route::current())) {
+            $routeParameters = Route::current()->parameters();
+            $slug = isset($routeParameters['slug']) ? $routeParameters['slug'] : null;
+        }
         if (empty($config)) {
             $retVal = false;
         } else {
