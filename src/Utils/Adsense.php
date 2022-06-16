@@ -37,22 +37,35 @@ class Adsense
     public static function isDisplayAdsenseBlock($config) {
         $retVal = true;
         $requestIp = self::getRealIpAddr();
-        $slug = null;
-        if (!empty(Route::current())) {
-            $routeParameters = Route::current()->parameters();
-            $slug = isset($routeParameters['slug']) ? $routeParameters['slug'] : null;
+        $routeParameters = (Route::current()) ? Route::current()->parameters() : [];
+        $currentPath = '/' . \Request::path();
+        if ($currentPath === '//') {
+            $currentPath = '/';
         }
+        $currentPath = preg_replace('/\/c\/\d+/i',"", $currentPath);
+        $slug = isset($routeParameters['slug']) ? $routeParameters['slug'] : null;
         if (empty($config)) {
             $retVal = false;
+        } elseif (!isset($config->ads_client_id) || !isset($config->ads_slot_id)
+            || (isset($config->ads_client_id) && empty($config->ads_client_id))
+            || (isset($config->ads_slot_id) && empty($config->ads_slot_id))) {
+            return false;
         } else {
             $wasIpAllowed = self::isAllowIp($config->ip_range, $requestIp);
             $configType = $config->type;
             $configStores = $config->stores;
-            if (empty($slug)) {
-                $retVal = false;
-            } else if (!empty($slug) && $configType == 'block' && (empty($configStores) || in_array($slug, $configStores))) {
+            $configUrls = isset($config->list_url) ? $config->list_url : "";
+            if ($configUrls !== "") {
+                $configUrls = explode("\n", $configUrls);
+            }
+
+            if (!empty($slug) && $configType == 'block' && (empty($configStores) || in_array($slug, $configStores))) {
                 $retVal = false;
             } else if (!empty($slug) && $configType == 'allow' && (!empty($configStores) && !in_array($slug, $configStores))) {
+                $retVal = false;
+            } else if ($configType == 'block' && (!empty($configUrls) || in_array($currentPath, $configUrls))) {
+                $retVal = false;
+            } else if ($configType == 'allow' && (!empty($configUrls) && !in_array($currentPath, $configUrls))) {
                 $retVal = false;
             }
             if ($retVal && !$wasIpAllowed) {

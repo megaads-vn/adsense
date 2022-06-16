@@ -20,7 +20,18 @@ if ($isDispAdsense) : ?>
 
     // Detect if library loaded
     function isLoadedScript(lib) {
-        return document.querySelectorAll('[src="' + lib + '"]').length > 0
+        let retval = false;
+        const allScriptTag = document.querySelectorAll('script');
+        if (allScriptTag.length > 0) {
+            const pattern = new RegExp(lib, 'gi');
+            for (const scriptTag of allScriptTag) {
+                if (pattern.test(scriptTag.src)) {
+                    retval = true;
+                    break;
+                }
+            }
+        }
+        return retval;
     }
 
     function isLoadedStyle(attributeName) {
