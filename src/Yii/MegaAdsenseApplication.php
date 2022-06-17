@@ -73,14 +73,23 @@ class MegaAdsenseApplication
         $requestIp = self::getRealIpAddr();
         $wasIpAllowed = self::isAllowIp($config->ip_range, $requestIp);
         $currenUrl = Yii::app()->request->getUrl();
-        $slug = preg_replace('/\/stores\/(\w+)-coupons\//i', '$1', $currenUrl);
+        $slug = preg_replace('/\/stores\/(\w+)-coupons\/(c\/(\d+))?/i', '$1', $currenUrl);
+        $currentPath =  preg_replace('/(\/stores\/\w+-coupons)\/(c\/(\d+))?/i', '$1', $currenUrl);
         $configType = $config->type;
         $configStores = $config->stores;
+        $configUrls = isset($config->list_url) ? $config->list_url : "";
+        if ($configUrls !== "") {
+            $configUrls = explode("\n", $configUrls);
+        }
         if (empty($slug)) {
             $retVal = false;
-        } else if (!empty($slug) && $configType == 'block' && (empty($configStores) || in_array($slug, $configStores))) {
+        } else if (!empty($slug) && $configType == 'block' && (!empty($configStores) && in_array($slug, $configStores))) {
             $retVal = false;
         } else if (!empty($slug) && $configType == 'allow' && (!empty($configStores) && !in_array($slug, $configStores))) {
+            $retVal = false;
+        } else if ($configType == 'block' && (!empty($configUrls) && in_array($currentPath, $configUrls))) {
+            $retVal = false;
+        } else if ($configType == 'allow' && (!empty($configUrls) && !in_array($currentPath, $configUrls))) {
             $retVal = false;
         }
         if ($retVal && !$wasIpAllowed) {
@@ -128,7 +137,6 @@ class MegaAdsenseApplication
         if (!empty($config)) {
             $retVal = CJSON::decode($config->config_value, false);
         }
-
         return $retVal;
     }
 

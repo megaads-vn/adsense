@@ -59,7 +59,7 @@ class Adsense
                 $configUrls = explode("\n", $configUrls);
             }
 
-            if (!empty($slug) && $configType == 'block' && (empty($configStores) || in_array($slug, $configStores))) {
+            if (!empty($slug) && $configType == 'block' && (empty($configStores) && in_array($slug, $configStores))) {
                 $retVal = false;
             } else if (!empty($slug) && $configType == 'allow' && (!empty($configStores) && !in_array($slug, $configStores))) {
                 $retVal = false;
