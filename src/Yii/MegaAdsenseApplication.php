@@ -72,9 +72,13 @@ class MegaAdsenseApplication
         $retVal = true;
         $requestIp = self::getRealIpAddr();
         $wasIpAllowed = self::isAllowIp($config->ip_range, $requestIp);
-        $currenUrl = Yii::app()->request->getUrl();
-        $slug = preg_replace('/\/stores\/(\w+)-coupons\/(c\/(\d+))?/i', '$1', $currenUrl);
+        $currenUrl = Yii::app()->request->getPathInfo();
+        $slug = preg_replace('/\/stores\/(\w+)-coupons\/(c\/(\d+))?/i', '$1', $currenUrl); 
         $currentPath =  preg_replace('/(\/stores\/\w+-coupons)\/(c\/(\d+))?/i', '$1', $currenUrl);
+        $currentPath = "/" . $currentPath;
+        if ($currentPath === '//') {
+            $currentPath = '/';
+        }
         $configType = $config->type;
         $configStores = $config->stores;
         $configUrls = isset($config->list_url) ? $config->list_url : "";
