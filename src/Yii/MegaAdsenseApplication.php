@@ -80,6 +80,8 @@ class MegaAdsenseApplication
         $configUrls = isset($config->list_url) ? $config->list_url : "";
         if ($configUrls !== "") {
             $configUrls = explode("\n", $configUrls);
+        } else {
+            $configUrls = [];
         }
         if (empty($slug)) {
             $retVal = false;

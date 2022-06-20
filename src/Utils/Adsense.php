@@ -57,6 +57,8 @@ class Adsense
             $configUrls = isset($config->list_url) ? $config->list_url : "";
             if ($configUrls !== "") {
                 $configUrls = explode("\n", $configUrls);
+            } else {
+                $configUrls = [];
             }
 
             if (!empty($slug) && $configType == 'block' && (empty($configStores) && in_array($slug, $configStores))) {
