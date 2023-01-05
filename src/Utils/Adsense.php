@@ -18,7 +18,11 @@ class Adsense
     }
 
     public static function display($params = []) {
-        return view('adsense::ads', $params);
+        $view = 'adsense::ads';
+        if (isset($params['twoSide']) && $params['twoSide'] == 'show') {
+            $view = 'adsense::ads-w-side';
+        }
+        return view($view, $params);
     }
 
     public static function option($key, $default = NULL) {
@@ -36,6 +40,9 @@ class Adsense
 
     public static function isDisplayAdsenseBlock($config) {
         $retVal = true;
+        if (Config::get('app.debug')) {
+            return $retVal;
+        }
         $requestIp = self::getRealIpAddr();
         $routeParameters = (Route::current()) ? Route::current()->parameters() : [];
         $currentPath = '/' . \Request::path();
