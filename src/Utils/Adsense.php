@@ -43,6 +43,11 @@ class Adsense
         if (Config::get('app.debug')) {
             return $retVal;
         }
+        $routeName = \Request::route()->getName();
+        $currentUrl = \Request::path();
+        if ($routeName == 'frontend::home' || $currentUrl == '/') {
+            return $retVal;
+        }
         $requestIp = self::getRealIpAddr();
         $routeParameters = (Route::current()) ? Route::current()->parameters() : [];
         $currentPath = '/' . \Request::path();
