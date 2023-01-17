@@ -45,7 +45,7 @@ class Adsense
         }
         $routeName = \Request::route()->getName();
         $currentUrl = \Request::path();
-        if ($routeName == 'frontend::home' || $currentUrl == '/') {
+        if (($routeName == 'frontend::home' || $currentUrl == '/') && !isset($_COOKIE['forceHideAdsense'])) {
             return $retVal;
         }
         $requestIp = self::getRealIpAddr();
@@ -88,6 +88,9 @@ class Adsense
                 $retVal = false;
             }
         }
+        if (isset($_COOKIE['forceHideAdsense']) && $_COOKIE['forceHideAdsense'] == 'hide') {
+            $retVal = false;
+        }
         return $retVal;
     }
     
@@ -127,5 +130,9 @@ class Adsense
             }
         }
         return $retVal;
+    }
+
+    public static function shareParams($name, $value) {
+        $_COOKIE[$name] = $value;
     }
 }
