@@ -77,7 +77,7 @@ class Adsense
                 $retVal = false;
             } else if (!empty($slug) && $configType == 'allow' && (!empty($configStores) && !in_array($slug, $configStores))) {
                 $retVal = false;
-            } else if ($configType == 'block' && (!empty($configUrls) || in_array($currentPath, $configUrls))) {
+            } else if ($configType == 'block' && (!empty($configUrls) && in_array($currentPath, $configUrls))) {
                 $retVal = false;
             } else if ($configType == 'allow' && (!empty($configUrls) && !in_array($currentPath, $configUrls))) {
                 $retVal = false;
