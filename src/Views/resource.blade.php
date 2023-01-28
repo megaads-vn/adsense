@@ -23,12 +23,12 @@ if ($isDispAdsense) : ?>
                 if ($(footerAds).html().length > 0) {
                     $('.activity-bottom').addClass('highlight');
                 }
-                if ($(rigthAds).html().length <= 0) {
-                    $('.activity-right').hide();
-                }
-                if ($(leftAds).html().length <= 0) {
-                    $('.activity-left').hide();
-                }
+                // if ($(rigthAds).html().length <= 0) {
+                //     $('.activity-right').hide();
+                // }
+                // if ($(leftAds).html().length <= 0) {
+                //     $('.activity-left').hide();
+                // }
             }, 1200);
         }
     }
@@ -86,19 +86,29 @@ if ($isDispAdsense) : ?>
     var leftAds = $('.ads-left');
     var rigthAds = $('.ads-right');
 
+    // $(window).scroll(function () {
+    //     var scroll = $(window).scrollTop();
+    //     if (scroll > (headerPosition + '150') && scroll < (footerPosition - footerHeight - 370)) {
+    //          $('.activity-left').fadeIn();
+    //     } else {
+    //          $('.activity-left').hide();
+    //     }
+    //     if (scroll > (headerPosition + '150') && scroll < (footerPosition - footerHeight - 370)) {
+    //          $('.activity-right').fadeIn();
+    //     } else {
+    //          $('.activity-right').hide();
+    //     }
+    // });
+    
     $(window).scroll(function () {
         var scroll = $(window).scrollTop();
-        if (scroll > (headerPosition + '150') && scroll < (footerPosition - footerHeight - 370) && $(leftAds).html().length > 0) {
-             $('.activity-left').fadeIn();
+        if (scroll > (headerPosition + '150') && scroll < (footerPosition - footerHeight - 370)) {
+            $('.activity-vertical').fadeIn();
         } else {
-             $('.activity-left').hide();
-        }
-        if (scroll > (headerPosition + '150') && scroll < (footerPosition - footerHeight - 370) && $(rigthAds).html().length > 0) {
-             $('.activity-right').fadeIn();
-        } else {
-             $('.activity-right').hide();
+            $('.activity-vertical').hide();
         }
     });
+
     $('.activity-button').click(function() {
         $(this).parents('.activity-vertical').css({
             'transform': 'translateY(-30px)',
