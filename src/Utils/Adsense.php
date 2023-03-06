@@ -43,7 +43,7 @@ class Adsense
         if (Config::get('app.debug')) {
             return $retVal;
         }
-        $routeName = \Request::route()->getName();
+        $routeName = (\Request::route()) ? \Request::route()->getName() : "";
         $currentUrl = \Request::path();
         if (($routeName == 'frontend::home' || $currentUrl == '/') && !isset($_COOKIE['forceHideAdsense'])) {
             return $retVal;
