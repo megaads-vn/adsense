@@ -23,7 +23,23 @@ class ResourceInjectionMiddleware
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        
+        $inoreUri = config('app.adsense_ignore_uri', []);
+        if (!is_array($inoreUri)) {
+            $inoreUri = [];
+        }
+        if (!empty($inoreUri)) {
+            $ignore = false;
+            $path = $request->path();
+            foreach ($inoreUri as $uri) {
+                if (strpos($path, $uri) !== false) {
+                    $ignore = true;
+                    break;
+                }
+            }
+            if ($ignore) {
+                return $next($request);
+            }
+        }
         $response = $next($request);
         $this->modifyResponse($request, $response);
         return $response;
@@ -123,5 +139,10 @@ class ResourceInjectionMiddleware
             $element->setAttribute( 'href', $filePath);
         }
         return $element;
+    }
+
+    private function isRegex($string)
+    {
+        return preg_match('/^\/.*\/[a-z]*$/i', $string);
     }
 }
